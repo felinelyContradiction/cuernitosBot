@@ -1,0 +1,132 @@
+{
+	
+	"langChange" 				: "I'll speak english from now on!",
+	"invalidLang"				: "Language provided doesn't exists.",
+	
+	
+    "balanceInfo" 				: "**{memberName}'s** balance currently is: {coinSymbol}**{memberBalance}** **{coinName}**.",
+	"noMoney"					: "You don't have enough **{coinName}** to afford that.",
+	"dailyAlreadyClaimed"		: "Hey **{memberName}**, it looks like you've already picked up your daily reward!",
+	"dailyClaimed"				: "**{memberName}**, you've been awarded {coinSymbol}**{extra1}** **{coinName}**! Don't forget to check back in tomorrow. :3",
+	"gaveMoneySingle"			: "**{memberName}** gave {coinSymbol}**{extra1}** **{coinName}** to **{extra2}**.",
+	"gaveMoneyMultiple"			: "**{memberName}** has distributed {coinSymbol}**{extra1}** **{coinName}** between **{extra2}**.",
+	"rankingTitle"				: "**{coinName}** Ranking",
+    "invalidAmount" 			: "The provided amount isn't valid.",
+    "noSpecifiedAmount" 		: "You didn't provide an amount.",
+	"belowOrEqualToZero"		: "The provided amount cannot be below or equal to zero.",
+	
+	
+	"gambleZero"				: "You can't gamble {coinSymbol}**0** **{coinName}**.",
+	"gambleWon"					: "You won!",
+	"gambleLose"				: "You lost...",
+	"newGambleBalance"			: "You now have {coinSymbol}**{extra1}** **{coinName}**.",
+
+	"noCoinNameSpecified"		: "You need to specify a new name.",
+	"newCoinNameSuccess"		: "The server's coin name now is: **{extra1}**",
+	
+	"noCoinSymbolSpecified"		: "You need to specify a new symbol.",
+	"newCoinSymbolSuccess"		: "The server's coin symbol now is: **{extra1}**",
+	
+	"firstDailyValueInvalid"	: "The first value must be an integer.",
+	"secondDailyValueInvalid"	: "The second value must be an integer.",
+	"dailyValuesBelowZero"		: "None of the values can be equal or smaller to zero.",
+	"firstDailyValueBigger"		: "The first value can't be bigger than the second value.",
+	"secondDailyValueSmaller"	: "The second value can't be smaller than the first value.",
+	"newDailyRangeSuccess"		: "Daily rewards range now goes between **{extra1}** and **{extra2}**.",
+	
+	"roleAdded"					: "The '**{extra1}**' role has been added to the role shop with the price of {coinSymbol}**{extra2} {coinName}**.",
+	"roleRemoved"				: "The '**{extra1}**' role has been removed from the role shop.",
+	
+	"invalidIndex"				: "The provided index is invalid.",
+	"roleShop"					: "Role shop",
+	"shopAdquired"				: "¡You bought the '{extra1}' role!",
+	"alreadyHasRole"			: "You already have that role.",
+	
+	"invalidPage"				: "The page specified doesn't exist.",
+	"unknownKeyword"			: "The provided keyword doesn't exist.",
+	"noUserSpecified"			: "You didn't specified anyone.",
+	"noAdminPrivileges"			: "You don't have the privileges to do that.",
+	"NSFWOnlyCommand"			: "This command is NSFW only.",
+	"notPossible"				: "You can't do that.",
+	
+	
+	"page"						: "Page",
+	"economy"					: "Economy",
+	"gambling"					: "Gambling",
+	"nsfw"						: "NSFW",
+	"roulette"					: "Russian Roulette",
+	"admin"						: "Administration",
+	
+	
+	"walletCommand"				: "See your's or someone else's balance.",
+	"giveCommand"				: "Give someone an amount of **{coinName}**. If multiple users are specified then the amount will be distributed between all of them.",
+	"dailyCommand"				: "Claim your daily **{coinName}** reward.",
+	"rankCommand"				: "Wealthiest users rank table.",
+	"shopListCommand"			: "Check out the role shop.",
+	"shopBuyCommand"			: "Buy a role from the role shop.",
+	
+	"doubleCommand"				: "If you're lucky enough, you might double what you gamble!",
+	"coinflipCommand"			: "Leave something up to luck with a trusty coin.",
+	"rollCommand"				: "Roll the dice. You can specify the amount of dice and sides.",
+	
+	"e621Command"				: "Search posts across e621.",
+	
+	"coinNameCommand"			: "Changes the server's coin name.",
+	"coinSymbolCommand"			: "Changes the server's coin symbol.",
+	"dailyRangeCommand"			: "Changes the server's daily rewards range.",
+	"setLangCommand"			: "Changes CuernitosBot language.",
+	"addShopRoleCommand"		: "Adds a role to the shop.",
+	"removeShopRoleCommand"		: "Removes a role from the shop.",
+	
+	"ruJoinHelp"				: "Join the room.",  
+	"ruLeaveHelp"				: "Leave the room.",  
+	"ruStartHelp"				: "Start the game.",  
+	"ruShootHelp"				: "Try to shoot someone. If the weapon doesn't fire, you'll have to pull the trigger on your head.",  
+	"ruShootmeHelp"				: "Shoot the weapon at your head.",  
+	"ruBetHelp"					: "Place a bet of **{coinName}**. At the end of the game, the winner takes all.",
+	"ruWinsHelp"				: "See your's or someone else's victories.",
+	
+	"name"						: "name",
+	"amount"					: "amount",
+	"tags"						: "tags",
+	"user"						: "user",
+	"users"						: "users",
+	"symbol"					: "symbol",
+	"lang"						: "language",
+	"firstValue"				: "firstValue",
+	"secondValue"				: "secondValue",
+	"dice"						: "2d6",
+	"role"						: "role",
+	"price"						: "price",
+	"index"						: "index",
+	
+	"e621NotFound"				: "I couldn't find anything. :(",
+	"e621GoToPost"				: "Go to e621",
+	"e621ResultsAmountFound"	: "I've found {extra1} results with these tags.",
+	
+	"ruJoin"					: "**{memberName}** has joined the Russian Roulette game!",
+	"ruLeave"					: "**{memberName}** has left the Russian Roulette game. Coward.",
+	"ruStart"					: "The Russian Roulette game has begun!",
+	"ruAlreadyStarted"			: "A game is already in progress.",
+	"ruNoGame"					: "There is no game currently in progress.",
+	"ruNotInGame"				: "**{memberName}**, you're not in game.",
+	"ruNotEnoughPlayers"		: "There are not enough players to start the game.",
+	"ruYourTurn"				: "It's **{extra1}**'s turn.",
+	"ruCantBet"					: "You can't place a bet while the game is ongoing.",
+	"ruBetPlaced"				: "**{memberName}** has bet {coinSymbol}**{extra1}** **{coinName}**! Now the winner will take home {coinSymbol}**{extra2}** **{coinName}**!",
+	"ruNotYourTurn"				: "It's not your turn yet, **{extra1}**.",
+	"ruShootSuccess"			: "**{extra1}** shot **{extra2}**!",
+	"ruShootFail"				: "**{extra1}** tried to shoot **{extra2}**, but the gun didn't fire.",
+	"ruShootYourselfFail"		: "**{extra1}** shot themselves in the head!",
+	"ruShootYourselfSuccess"	: "**{extra1}** pulled the trigger on their head, but nothing happened.",
+	"ruGameOver"				: "The game is over. **{extra1}** has won! (**{extra2}** victories.)",
+	"ruBetWinner"				: "**{memberName}** also won {coinSymbol}**{extra1}** **{coinName}**!",
+	"ruUserIsNotPlaying"		: "**{memberName}** isn't playing.",
+	"ruWins"					: "**{memberName}** has **{extra1}** victories.",
+	"ruNoAction"				: "You didn't provide a valid action.",
+	
+	"coinflipHeads"				: "**Heads!**",
+	"coinflipTails"				: "**Tails!**",
+	
+	"invalidDice"				: "Invalid dice."
+}

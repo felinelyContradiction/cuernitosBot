@@ -1,0 +1,134 @@
+{
+	
+	"langChange" 				: "¡De ahora en adelante hablaré en español!",
+	"invalidLang"				: "Ese idioma no existe.",
+	
+	
+	"balanceInfo" 				: "El balance de **{memberName}** actualmente es de: {coinSymbol}**{memberBalance}** **{coinName}**.",
+	"noMoney"					: "No tienes suficientes **{coinName}** para eso.",
+	"dailyAlreadyClaimed"		: "**{memberName}**, ya has reclamado tu recompensa diaria.",
+	"dailyClaimed"				: "¡**{memberName}**, has recibido {coinSymbol}**{extra1}** **{coinName}**! Vuelva mañana. :3",
+	"gaveMoneySingle"			: "**{memberName}** le ha pasado {coinSymbol}**{extra1}** **{coinName}** a **{extra2}**.",
+	"gaveMoneyMultiple"			: "**{memberName}** ha repartido {coinSymbol}**{extra1}** **{coinName}** entre **{extra2}**.",
+	"rankingTitle"				: "Ranking de **{coinName}**",
+	"invalidAmount" 			: "La cantidad proporcionada no es válida.",
+	"noSpecifiedAmount" 		: "No proporcionaste una cantidad.",
+	"belowOrEqualToZero"		: "La cantidad no puede ser igual o menor a cero.",
+	
+	
+	"gambleZero"				: "No puedes apostar {coinSymbol}**0** **{coinName}**.",
+	"gambleWon"					: "¡Ganaste!",
+	"gambleLose"				: "Perdiste...",
+	"newGambleBalance"			: "Ahora tienes {coinSymbol}**{extra1}** **{coinName}**.",
+
+	"noCoinNameSpecified"		: "Tienes que proporcionar un nombre.",
+	"newCoinNameSuccess"		: "El nuevo nombre de la moneda del servidor ahora es: **{extra1}**",
+	
+	"noCoinSymbolSpecified"		: "Tienes que proporcionar un símbolo.",
+	"newCoinSymbolSuccess"		: "El nuevo símbolo de la moneda del servidor ahora es: **{extra1}**",
+	
+	"firstDailyValueInvalid"	: "El primer valor proporcionado no es un número entero.",
+	"secondDailyValueInvalid"	: "El segundo valor proporcionado no es un número entero.",
+	"dailyValuesBelowZero"		: "Ninguno de los valores puede ser igual o menor a cero",
+	"firstDailyValueBigger"		: "El primer valor no puede ser mayor o igual al segundo.",
+	"secondDailyValueSmaller"	: "El segundo valor no puede ser menor o igual al primero.",
+	"newDailyRangeSuccess"		: "El nuevo rango de la diaria ahora va de **{extra1}** a **{extra2}**.",
+	
+	"roleAdded"					: "El rol '**{extra1}**' ha sido añadido a la tienda por el precio de **{extra2}**.",
+	"roleRemoved"				: "El rol '{**extra1}**' ha sido eliminado de la tienda.",
+	
+	"invalidIndex"				: "El índice proporcionado no existe.",
+	"roleShop"					: "Tienda de roles",
+	"shopAdquired"				: "¡Has comprado el rol '{extra1}'!",
+	"alreadyHasRole"			: "Ya tienes ese rol.",
+	
+	
+	"invalidPage"				: "Esa página no existe.",
+	"unknownKeyword"			: "La palabra clave ingresada no existe.",
+	"noUserSpecified"			: "No específicaste a nadie.",
+	"noAdminPrivileges"			: "No tienes los privilegios para hacer eso.",
+	"NSFWOnlyCommand"			: "Este comando solo se puede utilizar en canales NSFW.",
+	"notPossible"				: "No puedes hacer eso.",
+	
+	
+	"page"						: "Página",
+	"economy"					: "Economía",
+	"gambling"					: "Apuestas",
+	"nsfw"						: "NSFW",
+	"roulette"					: "Ruleta Rusa",
+	"admin"						: "Administración",
+	
+	
+	"walletCommand"				: "Ver tu balance o el de alguien más.",
+	"giveCommand"				: "Darle a alguien una cantidad de **{coinName}**. Si se menciona a más de una persona, la cantidad sera repartida entre todxs.",
+	"dailyCommand"				: "Reclamar tu recompensa de **{coinName}** diaria.",
+	"rankCommand"				: "Tabla de ranking de quienes tienen más **{coinName}**.",
+	"shopListCommand"			: "Ver la tienda de roles.",
+	"shopBuyCommand"			: "Comprar un rol de la tienda.",
+	
+	"doubleCommand"				: "Si tienes la suerte, puedes duplicar la cantidad de **{coinName}** que apuestes.",
+	"coinflipCommand"			: "Dejar algo a la suerte con una confiable moneda.",
+	"rollCommand"				: "Tirar dados. Se pueden específicar la cantidad y las caras.",
+	
+	"e621Command"				: "Buscar publicaciones de e621",
+	
+	"coinNameCommand"			: "Modifica el nombre de la moneda en el servidor.",
+	"coinSymbolCommand"			: "Modifica el símbolo de la moneda en el servidor.",
+	"dailyRangeCommand"			: "Modifica el rango de las recompensas diarias.",
+	"setLangCommand"			: "Cambia el idioma de la CuernitosBot.",
+	"addShopRoleCommand"		: "Añadir un rol a la tienda.",
+	"removeShopRoleCommand"		: "Quitar un de la tienda.",
+	
+	"ruJoinHelp"				: "Unirse a la sala.",
+	"ruLeaveHelp"				: "Salirse de la sala.",
+	"ruStartHelp"				: "Comenzar la partida.",
+	"ruShootHelp"				: "Intentar disparar a alguien. Si el arma no dispara, tendrás que presionar el gatillo en tu cabeza.",
+	"ruShootmeHelp"				: "Disparar el arma en tu cabeza.",
+	"ruBetHelp"					: "Apostar una cantidad de **{coinName}**. Al final de la partida quien gane se llevará todo.",
+	"ruWinsHelp"				: "Ver tus victorias o las de alguien más.",
+	
+	"name"						: "nombre",
+	"amount"					: "cantidad",
+	"tags"						: "tags",
+	"user"						: "usuarix",
+	"users"						: "usuarixs",
+	"symbol"					: "símbolo",
+	"lang"						: "idioma",
+	"firstValue"				: "primerValor",
+	"secondValue"				: "segundoValor",
+	"dice"						: "2d6",
+	"role"						: "rol",
+	"price"						: "precio",
+	"index"						: "índice",
+	
+	"e621NotFound"				: "No pude encontrar nada. :(",
+	"e621GoToPost"				: "Ir a e621",
+	"e621ResultsAmountFound"	: "Encontré {extra1} resultados con ese/esos tags."	,
+	
+	
+	"ruJoin"					: "¡**{memberName}** se ha unido a la partida de Ruleta Rusa!",
+	"ruLeave"					: "**{memberName}** se ha salido de la partida de Ruleta Rusa. Cobarde.",
+	"ruStart"					: "¡La partida de Ruleta Rusa ha comenzado!",
+	"ruAlreadyStarted"			: "Ya hay una partida en progreso.",
+	"ruNoGame"					: "No hay ninguna partida en progreso.",
+	"ruNotInGame"				: "**{memberName}**, no estás en la partida.",
+	"ruNotEnoughPlayers"		: "No hay suficientes jugadores para que la partida comience.",
+	"ruYourTurn"				: "Es el turno de **{extra1}**.",
+	"ruCantBet"					: "No puedes apostar mientras la partida está en progreso.",
+	"ruBetPlaced"				: "¡**{memberName}** ha apostado {coinSymbol}**{extra1}** **{coinName}**! Ahora quién gane se llevará {coinSymbol}**{extra2}** **{coinName}**!",
+	"ruNotYourTurn"				: "Aún no es tu turno, **{extra1}**.",
+	"ruShootSuccess"			: "¡**{extra1}** le ha disparado a **{extra2}**!",
+	"ruShootFail"				: "¡**{extra1}** le ha intentado disparar a **{extra2}** pero la bala no salió.",
+	"ruShootYourselfFail"		: "¡**{extra1}** se ha volado la cabeza!",
+	"ruShootYourselfSuccess"	: "**{extra1}** presiono el gatillo en su cabeza, pero no salió nada.",
+	"ruGameOver"				: "Se ha acabado la partida. ¡**{extra1}** ha ganado! (**{extra2}** victorias.)",
+	"ruBetWinner"				: "¡También **{memberName}** se ha llevado {coinSymbol}**{extra1}** **{coinName}**!",
+	"ruUserIsNotPlaying"		: "**{memberName}** no está jugando.",
+	"ruWins"					: "**{memberName}** tiene **{extra1}** victorias.",
+	"ruNoAction"				: "No proporcionaste ninguna acción válida.",
+	
+	"coinflipHeads"				: "**¡Cara!**",
+	"coinflipTails"				: "**¡Cruz!**",
+	
+	"invalidDice"				: "Dado inválido."
+}
