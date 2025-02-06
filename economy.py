@@ -10,42 +10,6 @@ defaultWallet: Dict = {
                 'ruGamesWon'        : 0,
                 }
 
-def checks(caller, guild):
-
-    if not doesGuildWalletFolderExist(guild.id):
-        createGuildWalletFolder(guild.id)
-
-    if not doesUserWalletExists(caller):
-        createUserWallet(caller)
-
-    try:
-        migrateWalletStructure(caller)
-    except:
-        pass
-
-    if not isConfigFileValid(caller):
-        addMissingEntries(caller)
-
-
-def migrateWalletStructure(caller):
-
-    callerID = caller.id
-    guildID = caller.guild.id
-
-    newFormat = defaultWallet.copy()
-
-    with open(f'data/servers/{guildID}/economy/{callerID}.txt', 'r') as file:
-        lines = file.readlines()
-
-        money = int(lines[0].replace('\n', ''))
-        lastDailyClaim = lines[1]
-
-    newFormat['money'] = int(money)
-    newFormat['lastDailyClaim'] = lastDailyClaim
-
-    with open(f'data/servers/{guildID}/economy/{callerID}.txt', 'w') as f:
-        for entry in newFormat:
-            f.write(f'{entry}={newFormat[entry]}\n')
 
 # Getters
 def getWalletInfo(caller) -> Dict:
@@ -233,3 +197,39 @@ def canClaimDaily(caller):
         return True
     else:
         return False
+
+def checks(caller, guild):
+
+    if not doesGuildWalletFolderExist(guild.id):
+        createGuildWalletFolder(guild.id)
+
+    if not doesUserWalletExists(caller):
+        createUserWallet(caller)
+
+    try:
+        migrateWalletStructure(caller)
+    except:
+        pass
+
+    if not isConfigFileValid(caller):
+        addMissingEntries(caller)
+
+def migrateWalletStructure(caller):
+
+    callerID = caller.id
+    guildID = caller.guild.id
+
+    newFormat = defaultWallet.copy()
+
+    with open(f'data/servers/{guildID}/economy/{callerID}.txt', 'r') as file:
+        lines = file.readlines()
+
+        money = int(lines[0].replace('\n', ''))
+        lastDailyClaim = lines[1]
+
+    newFormat['money'] = int(money)
+    newFormat['lastDailyClaim'] = lastDailyClaim
+
+    with open(f'data/servers/{guildID}/economy/{callerID}.txt', 'w') as f:
+        for entry in newFormat:
+            f.write(f'{entry}={newFormat[entry]}\n')

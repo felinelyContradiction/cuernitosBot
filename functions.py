@@ -20,13 +20,14 @@ def resetDefaultConfig(guildID=653492428002820096) -> None:
         for entry in data:
             f.write(f"{entry}={data[entry]}\n")
 
-def doesDataServerFolderExists():
-    if os.path.isfile(f'data/servers'):
+def doesDataServerFolderExists() -> bool:
+    if os.path.isdir(f'data'):
         return True
     else:
         return False
 
 def createDataServersFolder():
+    os.makedirs(f'data')
     os.makedirs(f'data/servers')
 
 def doesConfigFileExists(guildID=653492428002820096) -> bool:
@@ -93,6 +94,7 @@ def checkData(guildID=653492428002820096) -> None:
 
     if not isConfigFileValid(guildID):
         addMissingConfigs()
+
 
 if not doesDataServerFolderExists():
     createDataServersFolder()

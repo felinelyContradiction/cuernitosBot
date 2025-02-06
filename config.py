@@ -43,6 +43,7 @@ def getGamblingChance(guildID=653492428002820096):
 def getServerBuyableRoles(guildID=653492428002820096):
     return getConfigInfo(guildID)['buyableRoles']
 
+
 # Setters
 def setConfigFile(new, guildID=653492428002820096):
     with open(f'data/servers/{guildID}/config.txt', 'w') as f:

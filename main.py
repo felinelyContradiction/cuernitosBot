@@ -53,7 +53,7 @@ def updatePossibleStatus():
                       f', but nobody came']
 
 @tasks.loop(seconds=120)
-async def statusChange():
+async def statusUpdate():
     await client.change_presence(activity=discord.Activity(type=discord.ActivityType.watching, name=f"{choice(possibleStatus)}"))
 
 @client.event
@@ -81,7 +81,7 @@ async def on_ready() -> None:
 
     updatePossibleStatus()
 
-    statusChange.start()
+    statusUpdate.start()
     await client.change_presence(activity=discord.Activity(type=discord.ActivityType.watching, name=f"{choice(possibleStatus)}"))
 
 @commands.command(aliases=['help', 'comandos'], brief='Muestra la lista de comandos.', description="Muestra la lista de comandos y si le pasas un comando te habla más a fondo de él.", extras={'admin': False})
