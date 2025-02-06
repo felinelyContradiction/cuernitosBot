@@ -2,6 +2,7 @@
 	
 	"langChange" 				: "¡De ahora en adelante hablaré en español!",
 	"invalidLang"				: "Ese idioma no existe.",
+	"langList"					: "Lista de idiomas",
 	
 	
 	"balanceInfo" 				: "El balance de **{memberName}** actualmente es de: {coinSymbol}**{memberBalance}** **{coinName}**.",

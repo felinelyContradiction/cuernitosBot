@@ -31,7 +31,7 @@ client.remove_command('help')
 guildCounter = 0
 ready = False
 
-cogs = ['e621', 'economyCommands', 'admin', 'gambling', 'russianRoulette']
+cogs = ['economyCommands', 'e621', 'gambling', 'russianRoulette', 'admin']
 async def loadCogs():
     for cog in cogs:
         try:
