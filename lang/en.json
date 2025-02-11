@@ -75,7 +75,7 @@
 	"coinNameCommand"			: "Changes the server's coin name.",
 	"coinSymbolCommand"			: "Changes the server's coin symbol.",
 	"dailyRangeCommand"			: "Changes the server's daily rewards range.",
-	"setLangCommand"			: "Changes CuernitosBot language.",
+	"setLangCommand"			: "Changes **CuernitosBot** language. If no argument is provided, it shows a list with available languages.",
 	"addShopRoleCommand"		: "Adds a role to the shop.",
 	"removeShopRoleCommand"		: "Removes a role from the shop.",
 	
@@ -104,6 +104,7 @@
 	"e621NotFound"				: "I couldn't find anything. :(",
 	"e621GoToPost"				: "Go to e621",
 	"e621ResultsAmountFound"	: "I've found {extra1} results with these tags.",
+	"e621Searching"				: "Searching...",
 	
 	"ruJoin"					: "**{memberName}** has joined the Russian Roulette game!",
 	"ruLeave"					: "**{memberName}** has left the Russian Roulette game. Coward.",

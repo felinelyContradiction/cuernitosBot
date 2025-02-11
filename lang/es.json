@@ -76,7 +76,7 @@
 	"coinNameCommand"			: "Modifica el nombre de la moneda en el servidor.",
 	"coinSymbolCommand"			: "Modifica el símbolo de la moneda en el servidor.",
 	"dailyRangeCommand"			: "Modifica el rango de las recompensas diarias.",
-	"setLangCommand"			: "Cambia el idioma de la CuernitosBot.",
+	"setLangCommand"			: "Cambia el idioma de la **CuernitosBot**. Si no se le pasa ningún argumento, dará una lista con los idiomas disponibles.",
 	"addShopRoleCommand"		: "Añadir un rol a la tienda.",
 	"removeShopRoleCommand"		: "Quitar un de la tienda.",
 	
@@ -105,6 +105,7 @@
 	"e621NotFound"				: "No pude encontrar nada. :(",
 	"e621GoToPost"				: "Ir a e621",
 	"e621ResultsAmountFound"	: "Encontré {extra1} resultados con ese/esos tags."	,
+	"e621Searching"				: "Buscando...",
 	
 	
 	"ruJoin"					: "¡**{memberName}** se ha unido a la partida de Ruleta Rusa!",

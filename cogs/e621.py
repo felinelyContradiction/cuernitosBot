@@ -37,12 +37,14 @@ class e621Command(commands.Cog):
             await ctx.send(f':no_entry_sign:｜{langMan.getString("NSFWOnlyCommand", guildID=guildID)}')
             return
 
-
+        message = await ctx.send(f':blue_circle:｜{langMan.getString("e621Searching", guildID=guildID)}')
         posts = self.e621Client.posts.search(tags=f'order:random {tags}', blacklist=self.blacklist, limit=self.limit, page=self.page, ignorepage=self.ignorePagination)
 
         if not posts:
-            await ctx.send(f':blue_circle:｜{langMan.getString("e621NotFound", guildID=guildID)}')
+            await message.edit(content=f':blue_circle:｜{langMan.getString("e621NotFound", guildID=guildID)}')
+            #await ctx.send(f':blue_circle:｜{langMan.getString("e621NotFound", guildID=guildID)}')
             return
+
 
         post = choice(posts)
 
@@ -76,7 +78,7 @@ class e621Command(commands.Cog):
         self.lastE621PostFound = post['id']
 
         if '.webm' in url or '.mp4' in url:
-            await ctx.send(url)
+            await message.edit(content=url)
             return
 
         embed = discord.Embed(title=f"{', '.join(artist)}",
@@ -93,7 +95,7 @@ class e621Command(commands.Cog):
 
         embed.set_image(url=url)
 
-        await ctx.send(embed=embed)
+        await message.edit(embed=embed, content='')
 
 async def setup(client):
     await client.add_cog(e621Command(client))

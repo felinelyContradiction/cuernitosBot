@@ -4,7 +4,7 @@ from typing import Dict
 
 
 defaultConfigs: Dict = {
-                'lang'              : 'es',
+                'lang'              : 'en',
                 'dailyRange'        : (16, 64),
                 'coinName'          : 'Coins',
                 'coinSymbol'        : '$',
