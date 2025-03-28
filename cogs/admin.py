@@ -88,7 +88,7 @@ class admin(commands.Cog):
         await ctx.send(f":white_check_mark:｜{langMan.getString('newDailyRangeSuccess', guildID=guildID, extra1=firstValue, extra2=secondValue)}")
 
     @commands.command(aliases=['cambiarIdioma', 'cambiaridioma', 'setlang'])
-    async def setLang(self, ctx: discord.ext.commands, newLang = 'list'):
+    async def setLang(self, ctx: discord.ext.commands, langIndex = -1):
 
         author = getAuthor(ctx)
         guildID = ctx.message.author.guild.id
@@ -97,21 +97,25 @@ class admin(commands.Cog):
             await ctx.send(f":no_entry_sign:｜{langMan.getString('noAdminPrivileges', guildID=guildID)}")
             return
 
-        if newLang == 'list':
+        if langIndex == -1:
 
             text = f'> {langMan.getString("langList", guildID=guildID)}\n\n'
 
-            for lang in langMan.availableLanguages:
-                text = text + f'* {lang}\n'
+            for key, lang in enumerate(langMan.availableLanguages):
+                text = text + f'* {key} - {langMan.languagesNames[key]}\n'
 
             await ctx.send(text)
             return
 
-        if not newLang.lower() in langMan.availableLanguages:
+        if langIndex < 0 or langIndex > len(langMan.availableLanguages):
             await ctx.send(f":grey_question:｜{langMan.getString('invalidLang', guildID=guildID)}")
             return
 
-        setServerLang(newLang.lower(), guildID)
+        #if not newLang.lower() in langMan.availableLanguages:
+
+        newLang = langMan.availableLanguages[langIndex]
+
+        setServerLang(newLang, guildID)
 
         await ctx.send(f":white_check_mark:｜{langMan.getString('langChange', guildID=guildID)}")
 

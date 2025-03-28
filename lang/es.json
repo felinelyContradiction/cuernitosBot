@@ -1,5 +1,7 @@
 {
 	
+	"languageName"				: "Español",
+	
 	"langChange" 				: "¡De ahora en adelante hablaré en español!",
 	"invalidLang"				: "Ese idioma no existe.",
 	"langList"					: "Lista de idiomas",

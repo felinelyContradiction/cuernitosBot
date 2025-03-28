@@ -93,7 +93,7 @@ class gambling(commands.Cog):
 
         if not isinstance(cantidad, int):
 
-            if not cantidad.lower() in ['todo', 'all', 'mitad', 'half']:
+            if not cantidad.lower() in ['todo', 'all', 'mitad', 'half', 'random', 'aleatorio']:
                 await ctx.send(':grey_question:｜La palabra clave ingresada para específicar un monto no existe.')
                 return
 
@@ -103,6 +103,9 @@ class gambling(commands.Cog):
                 cantidad = getUserMoney(author)
             elif cantidad.lower() == 'mitad' or cantidad.lower() == 'half':
                 cantidad = getUserMoney(author) // 2
+            elif cantidad.lower() == 'random' or cantidad.lower() == 'aleatorio':
+                if getUserMoney(author) > 1:
+                    cantidad = randint(1, getUserMoney(author))
 
         if cantidad <= 0:
             await ctx.send(f':grey_question:｜{langMan.getString("gambleZero", guildID=guildID)}')

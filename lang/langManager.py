@@ -18,12 +18,18 @@ class langManager():
 
         self.langDirectory = 'lang/'
         self.availableLanguages = []
+        self.languagesNames = []
 
         for lang in os.listdir(self.langDirectory):
 
             if not lang.endswith('.json'):
                 continue
 
+            with open(self.langDirectory + lang, 'r', encoding='utf-8') as file:
+                data = json.load(file)
+
+
+            self.languagesNames.append(data['languageName'])
             self.availableLanguages.append(lang.replace('.json', ''))
 
 
@@ -41,6 +47,10 @@ class langManager():
 
     def getString(self, stringName='langChange', member: discord.member.Member = None, guildID = None, extra1 = None, extra2 = None, extra3 = None):
         strings = self.getLangStrings(guildID)
+
+        if strings == None:
+            with open(self.langDirectory + 'en.json', 'r', encoding='utf-8') as file:
+                strings = json.load(file)
 
         if not stringName in strings:
             return 'String was not found.'
