@@ -155,7 +155,7 @@ class russianRoulette(commands.Cog):
             return
 
         self.matchData[str(guild.id)]['playing'] = True
-        await self.fillChambers(guild)
+        self.fillChambers(guild)
         await ctx.send(f":gun:｜{langMan.getString('ruStart', guildID=guild.id)}")
 
         await asyncio.sleep(self.delayBetweenMessages)

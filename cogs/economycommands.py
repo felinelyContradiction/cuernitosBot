@@ -24,7 +24,6 @@ class economyCommands(commands.Cog):
             migrateWalletStructure(author)
         except:
             pass
-        print(getWalletInfo(author))
 
     @commands.command(aliases=['cartera', 'balance', 'billetera'])
     async def wallet(self, ctx: discord.ext.commands, user: discord.Member = None):

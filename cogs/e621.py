@@ -5,12 +5,83 @@ with contextlib.redirect_stdout(None):
     from discord.ext import commands
     import e621py_wrapper as e621
 
-
 from random import choice, randint
-
 
 from utils import *
 from lang.langManager import langMan
+
+limit = 100
+
+class Button(discord.ui.View):
+    def __init__(self, message, index, posts, guildID, ctx):
+        super().__init__()
+
+        self.message = message
+        self.index = index
+        self.posts = posts
+        self.guildID = guildID
+        self.context = ctx
+
+    @discord.ui.button(label=f'<', style=discord.ButtonStyle.blurple)
+    async def goBack(self, interaction: discord.Interaction, button: discord.ui.button):
+        self.index -= 1
+
+        if self.index < 0:
+            self.index = 99
+
+        await self.message.edit(embed=getEmbed(self.context, self.guildID, self.posts, self.index))
+
+        await interaction.response.defer()
+
+    @discord.ui.button(label=f'Random', style=discord.ButtonStyle.blurple)
+    async def random(self, interaction: discord.Interaction, button: discord.ui.button):
+
+        self.index = randint(0, 99)
+
+        await self.message.edit(embed=getEmbed(self.context, self.guildID, self.posts, self.index))
+
+        await interaction.response.defer()
+
+    @discord.ui.button(label=f'>', style=discord.ButtonStyle.blurple)
+    async def goNext(self, interaction: discord.Interaction, button: discord.ui.button):
+        self.index += 1
+
+        if self.index >= len(self.posts):
+            self.index = 0
+
+        await self.message.edit(embed=getEmbed(self.context, self.guildID, self.posts, self.index))
+
+        await interaction.response.defer()
+
+def getPostInfo(post):
+
+    data = {}
+
+    data['id'] = post['id']
+    data['url'] = post['file']['url']
+    data['upVotes'] = post['score']['up']
+    data['downVotes'] = post['score']['down']
+    data['favCount'] = post['fav_count']
+    data['artist'] = post['tags']['artist']
+
+    return data
+
+def getEmbed(ctx, guildID, posts, index):
+
+    post = getPostInfo(posts[index])
+
+    embed = discord.Embed()
+
+    embed.title = f"{', '.join(post['artist'])}"
+    embed.description = f':thumbsup: ⁣ {post["upVotes"]} ⁣ | ⁣ :thumbsdown: ⁣ {abs(post["downVotes"])} ⁣ | ⁣ :heart: ⁣ {post["favCount"]}'
+    embed.add_field(name='', value=f'[__< {langMan.getString("e621GoToPost", guildID=guildID)} >__](https://e621.net/posts/{post["id"]})', inline=True)
+    embed.set_author(name=ctx.author.display_name, icon_url=ctx.author.avatar)
+
+    embed.set_image(url=post['url'])
+
+    embed.set_footer(text=f"{index + 1} / {len(posts)}")
+
+    return embed
 
 class e621Command(commands.Cog):
     def __init__(self, client):
@@ -19,12 +90,10 @@ class e621Command(commands.Cog):
 
         self.page = 0
         self.ignorePagination = True
-        self.limit = 100
 
         self.blacklist = 'underage'
 
         self.e621Client = e621.client()
-
 
 
     @commands.command()
@@ -33,69 +102,23 @@ class e621Command(commands.Cog):
         author = getAuthor(ctx)
         guildID = ctx.message.author.guild.id
 
+        curIndex = 0
+
         if not ctx.channel.is_nsfw():
             await ctx.send(f':no_entry_sign:｜{langMan.getString("NSFWOnlyCommand", guildID=guildID)}')
             return
 
         message = await ctx.send(f':blue_circle:｜{langMan.getString("e621Searching", guildID=guildID)}')
-        posts = self.e621Client.posts.search(tags=f'order:random {tags}', blacklist=self.blacklist, limit=self.limit, page=self.page, ignorepage=self.ignorePagination)
+        posts = self.e621Client.posts.search(tags=f'order:random {tags} -flash -webm', blacklist=self.blacklist, limit=limit, page=self.page, ignorepage=self.ignorePagination)
 
         if not posts:
             await message.edit(content=f':blue_circle:｜{langMan.getString("e621NotFound", guildID=guildID)}')
-            #await ctx.send(f':blue_circle:｜{langMan.getString("e621NotFound", guildID=guildID)}')
             return
 
+        embed = getEmbed(ctx, guildID, posts, curIndex)
+        button = Button(message, curIndex, posts, guildID, ctx)
 
-        post = choice(posts)
-
-        triesBeforeGivingUp = 5
-
-        if self.lastE621PostFound != None:
-            while self.lastE621PostFound == post['id']:
-                triesBeforeGivingUp -= 1
-                post = choice(posts)
-
-                if triesBeforeGivingUp <= 0:
-                    break
-
-        id = post['id']
-        url = post['file']['url']
-        upVotes = post['score']['up']
-        downVotes = post['score']['down']
-        favCount = post['fav_count']
-        artist = post['tags']['artist']
-
-        while '.swf' in url:
-            post = choice(posts)
-
-            id = post['id']
-            url = post['file']['url']
-            upVotes = post['score']['up']
-            downVotes = post['score']['down']
-            favCount = post['fav_count']
-            artist = post['tags']['artist']
-
-        self.lastE621PostFound = post['id']
-
-        if '.webm' in url or '.mp4' in url:
-            await message.edit(content=url)
-            return
-
-        embed = discord.Embed(title=f"{', '.join(artist)}",
-                              description=f':thumbsup: ⁣ {upVotes} ⁣ | ⁣ :thumbsdown: ⁣ {abs(downVotes)} ⁣ | ⁣ :heart: ⁣ {favCount}',
-                              )
-        embed.add_field(name='', value=f'[__< {langMan.getString("e621GoToPost", guildID=guildID)} >__](https://e621.net/posts/{id})', inline=True)
-        embed.set_author(name=ctx.author.display_name, icon_url=ctx.author.avatar)
-
-        resultsAmount: str = str(len(posts) // 2)
-        if len(posts) >= self.limit:
-            resultsAmount = '+' + str(self.limit)
-
-        embed.set_footer(text=f'{langMan.getString("e621ResultsAmountFound", guildID=guildID, extra1=resultsAmount)}')
-
-        embed.set_image(url=url)
-
-        await message.edit(embed=embed, content='')
+        await message.edit(embed=embed, content='', view=button)
 
 async def setup(client):
     await client.add_cog(e621Command(client))

@@ -31,7 +31,7 @@ client.remove_command('help')
 guildCounter = 0
 ready = False
 
-cogs = ['economyCommands', 'e621', 'gambling', 'russianRoulette', 'admin']
+cogs = ['economyCommands', 'e621', 'gambling', 'russianRoulette', 'admin', 'fun']
 async def loadCogs():
     for cog in cogs:
         try:
@@ -94,7 +94,7 @@ async def ayuda(ctx: discord.ext.commands, pagina: int = 1):
     embed.set_footer(icon_url="https://files.catbox.moe/1m1mxx.png")
     #embed.set_author(name=author.display_name, icon_url=author.avatar)
 
-    numberOfPages = 5
+    numberOfPages = 6
 
     match pagina:
         case 1:
@@ -139,11 +139,24 @@ async def ayuda(ctx: discord.ext.commands, pagina: int = 1):
                           f"* $ru bet `<{langMan.getString('amount', guildID=guildID)}>`\n  * {langMan.getString('ruBetHelp', guildID=guildID)}\n\n"
                           f"* $ru wins `<{langMan.getString('user', guildID=guildID)}>`\n  * {langMan.getString('ruWinsHelp', guildID=guildID)}\n\n",
                     inline=False)
-
-
         case 5:
 
-            embed.title = f'{langMan.getString("page", guildID=guildID)} 5/5  -  {langMan.getString("admin", guildID=guildID)}'
+            embed.title = f'{langMan.getString("page", guildID=guildID)} 5/{numberOfPages}  -  {langMan.getString("tag", guildID=guildID)}'
+
+            embed.add_field(name="󠁪",
+                    value=
+                          f"* $tag add `<{langMan.getString('name', guildID=guildID)}>` `<{langMan.getString('content', guildID=guildID)}>`\n  * {langMan.getString('tagAddHelp', guildID=guildID)}\n\n"
+                          f"* $tag remove `<{langMan.getString('tag', guildID=guildID)}>`\n  * {langMan.getString('tagRemoveHelp', guildID=guildID)}\n\n"
+                          f"* $tag local\n  * {langMan.getString('tagLocalHelp', guildID=guildID)}\n\n"
+                          f"* $tag global\n  * {langMan.getString('tagGlobalHelp', guildID=guildID)}\n\n"
+                          f"* $tag list `<{langMan.getString('user', guildID=guildID)}>`\n  * {langMan.getString('tagListHelp', guildID=guildID)}\n\n",
+
+                    inline = False)
+
+
+        case 6:
+
+            embed.title = f'{langMan.getString("page", guildID=guildID)} 6/{numberOfPages}  -  {langMan.getString("admin", guildID=guildID)}'
 
             embed.add_field(name="󠁪",
                             value=f"* $coinName `<{langMan.getString('name', guildID=guildID)}>`\n  * {langMan.getString('coinNameCommand', guildID=guildID)}\n\n"
@@ -163,7 +176,7 @@ client.add_command(ayuda)
 
 
 async def shutdown():
-    print('Apagando...')
+    print('Shutting down...')
     await client.close()
 
 async def main():

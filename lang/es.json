@@ -60,6 +60,7 @@
 	"nsfw"						: "NSFW",
 	"roulette"					: "Ruleta Rusa",
 	"admin"						: "Administración",
+	"fun"						: "Ocio",
 	
 	
 	"walletCommand"				: "Ver tu balance o el de alguien más.",
@@ -90,8 +91,15 @@
 	"ruBetHelp"					: "Apostar una cantidad de **{coinName}**. Al final de la partida quien gane se llevará todo.",
 	"ruWinsHelp"				: "Ver tus victorias o las de alguien más.",
 	
+	"tagAddHelp"				: "Crear un tag.",
+	"tagGlobalHelp"				: "Ver un tag aleatorio global.",
+	"tagLocalHelp"				: "Ver un tag aleatorio local.",
+	"tagRemoveHelp"				: "Quitar un tag propio.",
+	"tagListHelp"				: "Ver tu lista de tags o la de alguien más.",
+	
 	"name"						: "nombre",
 	"amount"					: "cantidad",
+	"tag"						: "tag",
 	"tags"						: "tags",
 	"user"						: "usuarix",
 	"users"						: "usuarixs",
@@ -103,10 +111,30 @@
 	"role"						: "rol",
 	"price"						: "precio",
 	"index"						: "índice",
+	"content"					: "contenido",
+	
+	"tagInvalidName"			: "No puedes usar eso como nombre.",
+	"tagNoName"					: "No proporcionaste ningún nombre para el tag!",
+	"tagNoContent"				: "No proporcionaste ningún contenido para el tag!",
+	"tagAdded"					: "Creaste el tag **{extra1}**!",
+	"tagRemoved"				: "Eliminaste el tag **{extra1}**!",
+	"tagNotOwner"				: "No te pertenece este tag.",
+	"tagNotFound"				: "No existe ningún tag llamado así.",
+	"tagAlreadyExists"			: "Ya tienes un tag llamado así.",
+	"tagAlreadyExitsHere"		: "Alguien ya creo un tag llamado así en este servidor",
+	"tagNoUserTags"				: "Esa persona no tiene ningún tag bajo su nombre.",
+	"tagLimitReached"			: "Has alcanzado el límite de tags.",
+	"tagReported"				: "Reporte envíado. Muchas gracias.",
+	"tagCurrentlyOcuppied"		: "Nombre ya en uso en este servidor.",
+	"tagNotOnThisServer"		: "Solo puedes ver la lista de tags de quienes estén en este servidor.",
+	"tagAuthor"					: "Autor/x",
+	"tagName"					: "Nombre del tag",
+	"tagNameTooLong"			: "El nombre del tag no pude ser de más de **{extra1}** carácteres.",
+	"tagContentTooLong"			: "El contenido del tag no puede ser de más de **{extra1}** carácteres.",
+	"tagFunny"					: "El contenido del tag no puede tener un **@**.",
 	
 	"e621NotFound"				: "No pude encontrar nada. :(",
 	"e621GoToPost"				: "Ir a e621",
-	"e621ResultsAmountFound"	: "Encontré {extra1} resultados con ese/esos tags."	,
 	"e621Searching"				: "Buscando...",
 	
 	
