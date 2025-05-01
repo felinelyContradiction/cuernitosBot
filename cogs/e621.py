@@ -24,6 +24,11 @@ class Button(discord.ui.View):
 
     @discord.ui.button(label=f'<', style=discord.ButtonStyle.blurple)
     async def goBack(self, interaction: discord.Interaction, button: discord.ui.button):
+
+        if interaction.user != self.context.author:
+            await interaction.response.defer()
+            return
+
         self.index -= 1
 
         if self.index < 0:
@@ -36,6 +41,10 @@ class Button(discord.ui.View):
     @discord.ui.button(label=f'Random', style=discord.ButtonStyle.blurple)
     async def random(self, interaction: discord.Interaction, button: discord.ui.button):
 
+        if interaction.user != self.context.author:
+            await interaction.response.defer()
+            return
+
         self.index = randint(0, 99)
 
         await self.message.edit(embed=getEmbed(self.context, self.guildID, self.posts, self.index))
@@ -44,6 +53,11 @@ class Button(discord.ui.View):
 
     @discord.ui.button(label=f'>', style=discord.ButtonStyle.blurple)
     async def goNext(self, interaction: discord.Interaction, button: discord.ui.button):
+
+        if interaction.user != self.context.author:
+            await interaction.response.defer()
+            return
+
         self.index += 1
 
         if self.index >= len(self.posts):
@@ -110,6 +124,15 @@ class e621Command(commands.Cog):
 
         message = await ctx.send(f':blue_circle:｜{langMan.getString("e621Searching", guildID=guildID)}')
         posts = self.e621Client.posts.search(tags=f'order:random {tags} -flash -webm', blacklist=self.blacklist, limit=limit, page=self.page, ignorepage=self.ignorePagination)
+
+        temp = []
+
+        for entry in posts:
+            if entry not in temp:
+                temp.append(entry)
+
+        posts = temp
+                
 
         if not posts:
             await message.edit(content=f':blue_circle:｜{langMan.getString("e621NotFound", guildID=guildID)}')

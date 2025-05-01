@@ -61,6 +61,7 @@
 	"roulette"					: "Ruleta Rusa",
 	"admin"						: "Administración",
 	"fun"						: "Ocio",
+	"tagBig"					: "Tag",
 	
 	
 	"walletCommand"				: "Ver tu balance o el de alguien más.",
@@ -74,7 +75,7 @@
 	"coinflipCommand"			: "Dejar algo a la suerte con una confiable moneda.",
 	"rollCommand"				: "Tirar dados. Se pueden específicar la cantidad y las caras.",
 	
-	"e621Command"				: "Buscar publicaciones de e621",
+	"e621Command"				: "Buscar publicaciones de e621.",
 	
 	"coinNameCommand"			: "Modifica el nombre de la moneda en el servidor.",
 	"coinSymbolCommand"			: "Modifica el símbolo de la moneda en el servidor.",

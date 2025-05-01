@@ -60,6 +60,7 @@
 	"roulette": "Russian Roulette",
 	"admin": "Administration",
 	"fun": "Fun",
+	"tagBig": "Tag",
 
 
 	"walletCommand": "View your balance or someone else's.",
@@ -73,7 +74,7 @@
 	"coinflipCommand": "Leave something to chance with a reliable coin.",
 	"rollCommand": "Roll dice. You can specify the quantity and faces.",
 
-	"e621Command": "Search for posts on e621",
+	"e621Command": "Search for posts on e621.",
 
 	"coinNameCommand": "Modify the server's currency name.",
 	"coinSymbolCommand": "Modify the server's currency symbol.",
