@@ -162,5 +162,7 @@
 	"coinflipHeads": "**Heads!**",
 	"coinflipTails": "**Tails!**",
 
-	"invalidDice": "Invalid dice."
+	"invalidDice": "Invalid dice.",
+	"tooManyDice": "The maximum amount of dice you can roll is: **{extra1}**.",
+	"tooManySides": "The maximum sides per die you can set is: **{extra1}**."
 }

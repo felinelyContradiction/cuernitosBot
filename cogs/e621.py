@@ -22,6 +22,22 @@ class Button(discord.ui.View):
         self.guildID = guildID
         self.context = ctx
 
+    @discord.ui.button(label=f'<<<', style=discord.ButtonStyle.blurple)
+    async def goBackTen(self, interaction: discord.Interaction, button: discord.ui.button):
+
+        if interaction.user != self.context.author:
+            await interaction.response.defer()
+            return
+
+        self.index -= 10
+
+        if self.index < 0:
+            self.index = len(self.posts) - abs(self.index)
+
+        await self.message.edit(embed=getEmbed(self.context, self.guildID, self.posts, self.index))
+
+        await interaction.response.defer()
+
     @discord.ui.button(label=f'<', style=discord.ButtonStyle.blurple)
     async def goBack(self, interaction: discord.Interaction, button: discord.ui.button):
 
@@ -32,7 +48,7 @@ class Button(discord.ui.View):
         self.index -= 1
 
         if self.index < 0:
-            self.index = 99
+            self.index = len(self.posts) - 1
 
         await self.message.edit(embed=getEmbed(self.context, self.guildID, self.posts, self.index))
 
@@ -45,7 +61,7 @@ class Button(discord.ui.View):
             await interaction.response.defer()
             return
 
-        self.index = randint(0, 99)
+        self.index = randint(0, len(self.posts) - 1)
 
         await self.message.edit(embed=getEmbed(self.context, self.guildID, self.posts, self.index))
 
@@ -62,6 +78,22 @@ class Button(discord.ui.View):
 
         if self.index >= len(self.posts):
             self.index = 0
+
+        await self.message.edit(embed=getEmbed(self.context, self.guildID, self.posts, self.index))
+
+        await interaction.response.defer()
+
+    @discord.ui.button(label=f'>>>', style=discord.ButtonStyle.blurple)
+    async def goNextTen(self, interaction: discord.Interaction, button: discord.ui.button):
+
+        if interaction.user != self.context.author:
+            await interaction.response.defer()
+            return
+
+        self.index += 10
+
+        if self.index >= len(self.posts):
+            self.index = len(self.posts) - self.index
 
         await self.message.edit(embed=getEmbed(self.context, self.guildID, self.posts, self.index))
 
@@ -123,7 +155,11 @@ class e621Command(commands.Cog):
             return
 
         message = await ctx.send(f':blue_circle:｜{langMan.getString("e621Searching", guildID=guildID)}')
-        posts = self.e621Client.posts.search(tags=f'order:random {tags} -flash -webm', blacklist=self.blacklist, limit=limit, page=self.page, ignorepage=self.ignorePagination)
+
+        if 'pool:' in tags:
+            posts = self.e621Client.posts.search(tags=f'order:id {tags} -flash -webm', blacklist=self.blacklist, limit=-1, page=self.page, ignorepage=self.ignorePagination)
+        else:
+            posts = self.e621Client.posts.search(tags=f'order:random {tags} -flash -webm', blacklist=self.blacklist, limit=limit, page=self.page, ignorepage=self.ignorePagination)
 
         temp = []
 

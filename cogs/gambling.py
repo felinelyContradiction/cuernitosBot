@@ -13,6 +13,8 @@ from lang.langManager import langMan
 class gambling(commands.Cog):
     def __init__(self, client):
         self.client = client
+        self.maxDice = 30
+        self.maxDiceSides = 1000
 
     @commands.command(aliases=['dados'])
     async def roll(self, ctx, diceInfo: str = '2d6'):
@@ -28,29 +30,37 @@ class gambling(commands.Cog):
 
         diceInfo: str = diceInfo.split('d')
 
-
-
-        dice: int = int(diceInfo[0])
-        sides: int = int(diceInfo[1])
-
-        if dice > 100:
+        try:
+            dice: int = int(diceInfo[0])
+            sides: int = int(diceInfo[1])
+        except:
+            await ctx.send(f':grey_question:｜{langMan.getString("invalidDice", guildID=guildID)}')
             return
 
-        if sides > 100:
+        if dice > self.maxDice:
+            await ctx.send(f':grey_question:｜{langMan.getString("tooManyDice", guildID=guildID, extra1=self.maxDice)}')
+            return
+
+        if sides > self.maxDiceSides:
+            await ctx.send(f':grey_question:｜{langMan.getString("tooManySides", guildID=guildID, extra1=self.maxDiceSides)}')
             return
 
         textResult: str = ''
-
+        totalResult: int = 0
         for i in range(dice):
 
             rollResult = randint(1, sides)
+            totalResult += rollResult
 
             if i >= dice - 1:
                 textResult = textResult + f'{rollResult}'
             else:
-                textResult = textResult + f'{rollResult}, '
+                textResult = textResult + f'{rollResult} + '
 
-        embed = discord.Embed(title=f'> {textResult}', description='', color=ctx.author.color)
+        if dice > 1:
+            textResult = textResult + f' = {totalResult}'
+
+        embed = discord.Embed(title=f'{textResult}', description='', color=ctx.author.color)
         embed.set_author(name=author.display_name, icon_url=author.avatar)
 
         embed.set_footer(text=f'({dice}d{sides})')

@@ -25,10 +25,10 @@
 	"newGambleBalance"			: "Ahora tienes {coinSymbol}**{extra1}** **{coinName}**.",
 
 	"noCoinNameSpecified"		: "Tienes que proporcionar un nombre.",
-	"newCoinNameSuccess"		: "El nuevo nombre de la moneda del servidor ahora es: **{extra1}**",
+	"newCoinNameSuccess"		: "Has cambiado el nombre de la moneda del servidor por: **{extra1}**",
 	
 	"noCoinSymbolSpecified"		: "Tienes que proporcionar un símbolo.",
-	"newCoinSymbolSuccess"		: "El nuevo símbolo de la moneda del servidor ahora es: **{extra1}**",
+	"newCoinSymbolSuccess"		: "Has cambiado el símbolo de la moneda del servidor por: **{extra1}**",
 	
 	"firstDailyValueInvalid"	: "El primer valor proporcionado no es un número entero.",
 	"secondDailyValueInvalid"	: "El segundo valor proporcionado no es un número entero.",
@@ -163,5 +163,7 @@
 	"coinflipHeads"				: "**¡Cara!**",
 	"coinflipTails"				: "**¡Cruz!**",
 	
-	"invalidDice"				: "Dado inválido."
+	"invalidDice"				: "Dado inválido.",
+	"tooManyDice"				: "El máximo de dados que puedes tirar es de: **{extra1}**.",
+	"tooManySides"				: "El máximo de caras que los dados pueden tener es de: **{extra1}**."
 }
