@@ -40,7 +40,7 @@ def getDailyRange(guildID=653492428002820096) -> tuple:
 def getGamblingChance(guildID=653492428002820096):
     return getConfigInfo(guildID)['gamblingWinChance']
 
-def getServerBuyableRoles(guildID=653492428002820096):
+def getServerBuyableRoles(guildID=653492428002820096) -> dict:
     return getConfigInfo(guildID)['buyableRoles']
 
 

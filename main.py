@@ -1,23 +1,18 @@
 import contextlib
 
-
-from random import randint, uniform, choice
+from random import choice
 
 from discord.ext.commands import Greedy
 
 with contextlib.redirect_stdout(None):
-    import discord, asyncio
+    import discord
     from discord.ext import commands, tasks
-    from discord.utils import get
-    import datetime
+    from discord import app_commands
 
 
-from data.TOKEN import token
+from data.TOKEN import discordBotKey
 from utils import *
-from economy import *
-from config import *
 from functions import checkData
-from typing import Dict
 
 from lang.langManager import langMan
 
@@ -31,7 +26,9 @@ client.remove_command('help')
 guildCounter = 0
 ready = False
 
-cogs = ['economyCommands', 'e621', 'gambling', 'russianRoulette', 'admin', 'fun']
+cogs = ['economyCommands', 'e621', 'gambling', 'russianRoulette', 'admin', 'tag']
+
+
 async def loadCogs():
     for cog in cogs:
         try:
@@ -43,18 +40,24 @@ async def loadCogs():
 
 possibleStatus = []
 
+
 def updatePossibleStatus():
     global possibleStatus
 
-    possibleStatus = [f'{guildCounter} servers!',
-                      f'$help',
-                      f'baaah',
-                      f'people turn into gambling addicts',
-                      f', but nobody came']
+    possibleStatus = [f'On {guildCounter} servers!',
+                      f'Now with slash commands!',
+                      f'Baaah',
+                      f'Making gambling addicts one user at the time.',
+                      f'But nobody came.',
+                      f'Trans rights are human rights.',
+                      f'Meow',
+                      f'Hello. :3']
+
 
 @tasks.loop(seconds=120)
 async def statusUpdate():
-    await client.change_presence(activity=discord.Activity(type=discord.ActivityType.watching, name=f"{choice(possibleStatus)}"))
+    await client.change_presence(activity=discord.CustomActivity(name=choice(possibleStatus)))
+
 
 @client.event
 async def on_guild_join(guild):
@@ -63,9 +66,9 @@ async def on_guild_join(guild):
 
     updatePossibleStatus()
 
+
 @client.event
 async def on_ready() -> None:
-
     global guildCounter, possibleStatus, ready
 
     if ready:
@@ -79,10 +82,17 @@ async def on_ready() -> None:
         guildCounter += 1
         checkData(guild.id)
 
+    await client.tree.sync()
+
+    guild = discord.Object(id=653492428002820096)
+    client.tree.copy_global_to(guild=guild)
+    await client.tree.sync(guild=guild)
+
     updatePossibleStatus()
 
     statusUpdate.start()
-    await client.change_presence(activity=discord.Activity(type=discord.ActivityType.watching, name=f"{choice(possibleStatus)}"))
+    await client.change_presence(activity=discord.CustomActivity(name=choice(possibleStatus)))
+
 
 class Button(discord.ui.View):
     def __init__(self, guildID, message):
@@ -91,10 +101,8 @@ class Button(discord.ui.View):
         self.guildID = guildID
         self.message = message
 
-
-    @discord.ui.button(emoji='🪙', style=discord.ButtonStyle.blurple)
+    @discord.ui.button(label='1', style=discord.ButtonStyle.blurple)
     async def economy(self, interaction: discord.Interaction, button: discord.ui.button):
-
         embed = discord.Embed()
         embed.title = f'{langMan.getString("economy", guildID=self.guildID)}'
 
@@ -111,9 +119,8 @@ class Button(discord.ui.View):
 
         await interaction.response.defer()
 
-    @discord.ui.button(emoji='🎰', style=discord.ButtonStyle.blurple)
+    @discord.ui.button(label='2', style=discord.ButtonStyle.blurple)
     async def gambling(self, interaction: discord.Interaction, button: discord.ui.button):
-
         embed = discord.Embed()
         embed.title = f'{langMan.getString("gambling", guildID=self.guildID)}'
 
@@ -127,9 +134,8 @@ class Button(discord.ui.View):
 
         await interaction.response.defer()
 
-    @discord.ui.button(emoji='🔞', style=discord.ButtonStyle.blurple)
+    @discord.ui.button(label='3', style=discord.ButtonStyle.blurple)
     async def NSFW(self, interaction: discord.Interaction, button: discord.ui.button):
-
         embed = discord.Embed()
         embed.title = f'{langMan.getString("nsfw", guildID=self.guildID)}'
 
@@ -141,9 +147,8 @@ class Button(discord.ui.View):
 
         await interaction.response.defer()
 
-    @discord.ui.button(emoji='🔫', style=discord.ButtonStyle.blurple)
+    @discord.ui.button(label='4', style=discord.ButtonStyle.blurple)
     async def roulette(self, interaction: discord.Interaction, button: discord.ui.button):
-
         embed = discord.Embed()
         embed.title = f'{langMan.getString("roulette", guildID=self.guildID)}'
 
@@ -157,14 +162,12 @@ class Button(discord.ui.View):
                               f"* $ru wins `<{langMan.getString('user', guildID=self.guildID)}>`\n  * {langMan.getString('ruWinsHelp', guildID=self.guildID)}\n\n",
                         inline=False)
 
-
         await self.message.edit(embed=embed)
 
         await interaction.response.defer()
 
-    @discord.ui.button(emoji='✉️', style=discord.ButtonStyle.blurple)
+    @discord.ui.button(label='5', style=discord.ButtonStyle.blurple)
     async def tag(self, interaction: discord.Interaction, button: discord.ui.button):
-
         embed = discord.Embed()
         embed.title = f'{langMan.getString("tagBig", guildID=self.guildID)}'
 
@@ -181,9 +184,8 @@ class Button(discord.ui.View):
 
         await interaction.response.defer()
 
-    @discord.ui.button(emoji='🖥️', style=discord.ButtonStyle.blurple)
+    @discord.ui.button(label='6', style=discord.ButtonStyle.blurple)
     async def admin(self, interaction: discord.Interaction, button: discord.ui.button):
-
         embed = discord.Embed()
         embed.title = f'{langMan.getString("admin", guildID=self.guildID)}'
 
@@ -200,10 +202,10 @@ class Button(discord.ui.View):
 
         await interaction.response.defer()
 
-@commands.command(aliases=['help', 'comandos'], brief='Muestra la lista de comandos.', description="Muestra la lista de comandos y si le pasas un comando te habla más a fondo de él.", extras={'admin': False})
-async def ayuda(ctx: discord.ext.commands, pagina: int = 1):
-
-    author = getAuthor(ctx)
+@commands.command(aliases=['help', 'comandos'], brief='Muestra la lista de comandos.',
+                  description="Muestra la lista de comandos y si le pasas un comando te habla más a fondo de él.",
+                  extras={'admin': False})
+async def ayuda(ctx: discord.ext.commands):
     guildID = ctx.message.author.guild.id
 
     embed = discord.Embed()
@@ -220,103 +222,24 @@ async def ayuda(ctx: discord.ext.commands, pagina: int = 1):
 
     message = await ctx.send(embed=embed)
 
-    '''
-    numberOfPages = 6
-
-    match pagina:
-        case 1:
-
-            embed.title = f'{langMan.getString("page", guildID=guildID)} 1/{numberOfPages}  -  {langMan.getString("economy", guildID=guildID)}'
-
-            embed.add_field(name="󠁪",
-                            value=f"* $wallet `<{langMan.getString('user', guildID=guildID)}>`\n  * {langMan.getString('walletCommand', guildID=guildID)}\n\n"
-                                  f"* $give `<{langMan.getString('amount', guildID=guildID)}>` `<{langMan.getString('users', guildID=guildID)}>`\n  * {langMan.getString('giveCommand', guildID=guildID)}\n\n"
-                                  f"* $daily\n  * {langMan.getString('dailyCommand', guildID=guildID)}\n\n"
-                                  f"* $rank\n  * {langMan.getString('rankCommand', guildID=guildID)}\n\n"
-                                  f"* $shop list\n  * {langMan.getString('shopListCommand', guildID=guildID)}\n\n"
-                                  f"* $shop buy `<{langMan.getString('index', guildID=guildID)}>`\n  * {langMan.getString('shopBuyCommand', guildID=guildID)}\n\n",
-                            inline=False)
-
-        case 2:
-            embed.title = f'{langMan.getString("page", guildID=guildID)} 2/{numberOfPages}  -  {langMan.getString("gambling", guildID=guildID)}'
-
-            embed.add_field(name="󠁪",
-                            value=f"* $double `<{langMan.getString('amount', guildID=guildID)}>`\n  * {langMan.getString('doubleCommand', guildID=guildID)}\n\n"
-                                  f"* $coinflip\n  * {langMan.getString('coinflipCommand', guildID=guildID)}\n\n"
-                                  f"* $roll `<{langMan.getString('dice', guildID=guildID)}>`\n  * {langMan.getString('rollCommand', guildID=guildID)}\n\n",
-                            inline=False)
-
-        case 3:
-            embed.title = f'{langMan.getString("page", guildID=guildID)} 3/{numberOfPages}  -  {langMan.getString("nsfw", guildID=guildID)}'
-
-            embed.add_field(name="󠁪",
-                            value=f"* $e621 `<{langMan.getString('tags', guildID=guildID)}>`\n  * {langMan.getString('e621Command', guildID=guildID)}\n\n",
-                            inline=False)
-
-        case 4:
-
-            embed.title = f'{langMan.getString("page", guildID=guildID)} 4/{numberOfPages}  -  {langMan.getString("roulette", guildID=guildID)}'
-
-            embed.add_field(name="󠁪",
-                    value=f"* $ru join\n  * {langMan.getString('ruJoinHelp', guildID=guildID)}\n\n"
-                          f"* $ru leave\n  * {langMan.getString('ruLeaveHelp', guildID=guildID)}\n\n"
-                          f"* $ru start\n  * {langMan.getString('ruStartHelp', guildID=guildID)}\n\n"
-                          f"* $ru shoot `<{langMan.getString('user', guildID=guildID)}>`\n  * {langMan.getString('ruShootHelp', guildID=guildID)}\n\n"
-                          f"* $ru shootme\n  * {langMan.getString('ruShootmeHelp', guildID=guildID)}\n\n"
-                          f"* $ru bet `<{langMan.getString('amount', guildID=guildID)}>`\n  * {langMan.getString('ruBetHelp', guildID=guildID)}\n\n"
-                          f"* $ru wins `<{langMan.getString('user', guildID=guildID)}>`\n  * {langMan.getString('ruWinsHelp', guildID=guildID)}\n\n",
-                    inline=False)
-        case 5:
-
-            embed.title = f'{langMan.getString("page", guildID=guildID)} 5/{numberOfPages}  -  {langMan.getString("tag", guildID=guildID)}'
-
-            embed.add_field(name="󠁪",
-                    value=
-                          f"* $tag add `<{langMan.getString('name', guildID=guildID)}>` `<{langMan.getString('content', guildID=guildID)}>`\n  * {langMan.getString('tagAddHelp', guildID=guildID)}\n\n"
-                          f"* $tag remove `<{langMan.getString('tag', guildID=guildID)}>`\n  * {langMan.getString('tagRemoveHelp', guildID=guildID)}\n\n"
-                          f"* $tag local\n  * {langMan.getString('tagLocalHelp', guildID=guildID)}\n\n"
-                          f"* $tag global\n  * {langMan.getString('tagGlobalHelp', guildID=guildID)}\n\n"
-                          f"* $tag list `<{langMan.getString('user', guildID=guildID)}>`\n  * {langMan.getString('tagListHelp', guildID=guildID)}\n\n",
-
-                    inline = False)
-
-
-        case 6:
-
-            embed.title = f'{langMan.getString("page", guildID=guildID)} 6/{numberOfPages}  -  {langMan.getString("admin", guildID=guildID)}'
-
-            embed.add_field(name="󠁪",
-                            value=f"* $coinName `<{langMan.getString('name', guildID=guildID)}>`\n  * {langMan.getString('coinNameCommand', guildID=guildID)}\n\n"
-                                  f"* $coinSymbol `<{langMan.getString('symbol', guildID=guildID)}>`\n  * {langMan.getString('coinSymbolCommand', guildID=guildID)}\n\n"
-                                  f"* $dailyRange `<{langMan.getString('firstValue', guildID=guildID)}>` `<{langMan.getString('secondValue', guildID=guildID)}>`\n  * {langMan.getString('dailyRangeCommand', guildID=guildID)}\n\n"
-                                  f"* $setLang `<{langMan.getString('lang', guildID=guildID)}>`\n  * {langMan.getString('setLangCommand', guildID=guildID)}\n\n"
-                                  f"* $addShopRole `<{langMan.getString('role', guildID=guildID)}>` `<{langMan.getString('price', guildID=guildID)}>`\n  * {langMan.getString('addShopRoleCommand', guildID=guildID)}\n\n"
-                                  f"* $removeShopRole `<{langMan.getString('role', guildID=guildID)}>`\n  * {langMan.getString('removeShopRoleCommand', guildID=guildID)}\n\n",
-                            inline=False)
-
-    if pagina <= 0 or pagina > numberOfPages:
-        await ctx.send(f":grey_question:｜{langMan.getString('invalidPage', guildID=guildID)}")
-        return
-    '''
-
     btn = Button(guildID, message)
 
-    await message.edit(embed = embed, content='', view = btn)
+    await message.edit(embed=embed, content='', view=btn)
 client.add_command(ayuda)
-
 
 async def shutdown():
     print('Shutting down...')
     await client.close()
 
+
 async def main():
     try:
         async with client:
-            await client.start(token, reconnect=True)
+            await client.start(discordBotKey, reconnect=True)
 
     except (KeyboardInterrupt, BaseException):
         await shutdown()
 
 
 if __name__ == '__main__':
-    client.run(token)
+    client.run(discordBotKey)

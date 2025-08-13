@@ -1,7 +1,7 @@
 {
 	"languageName": "English",
 
-	"langChange": "From now on I will speak in English!",
+	"langChange": "I'll speak english from now on.",
 	"invalidLang": "That language does not exist.",
 	"langList": "Language list",
 
@@ -24,10 +24,10 @@
 	"newGambleBalance": "You now have {coinSymbol}**{extra1}** **{coinName}**.",
 
 	"noCoinNameSpecified": "You must provide a name.",
-	"newCoinNameSuccess": "The server's currency name is now: **{extra1}**",
+	"newCoinNameSuccess": "The guild's currency name is now: **{extra1}**",
 
 	"noCoinSymbolSpecified": "You must provide a symbol.",
-	"newCoinSymbolSuccess": "The server's currency symbol is now: **{extra1}**",
+	"newCoinSymbolSuccess": "The guild's currency symbol is now: **{extra1}**",
 
 	"firstDailyValueInvalid": "The first value provided is not an integer.",
 	"secondDailyValueInvalid": "The second value provided is not an integer.",
@@ -76,8 +76,8 @@
 
 	"e621Command": "Search for posts on e621.",
 
-	"coinNameCommand": "Modify the server's currency name.",
-	"coinSymbolCommand": "Modify the server's currency symbol.",
+	"coinNameCommand": "Modify the guild's currency name.",
+	"coinSymbolCommand": "Modify the guild's currency symbol.",
 	"dailyRangeCommand": "Modify the daily reward range.",
 	"setLangCommand": "Change the language of **CuernitosBot**. If no argument is provided, it will list the available languages.",
 	"addShopRoleCommand": "Add a role to the shop.",
@@ -121,12 +121,12 @@
 	"tagNotOwner": "You don't own this tag.",
 	"tagNotFound": "No tag with that name exists.",
 	"tagAlreadyExists": "You already have a tag with that name.",
-	"tagAlreadyExitsHere": "Someone already created a tag with that name in this server.",
+	"tagAlreadyExitsHere": "Someone already created a tag with that name in this guild.",
 	"tagNoUserTags": "That person doesn't have any tags under their name.",
 	"tagLimitReached": "You've reached the tag limit.",
 	"tagReported": "Report sent. Thank you very much.",
-	"tagCurrentlyOcuppied": "Name already in use in this server.",
-	"tagNotOnThisServer" : "You can only see the tag list of those who are on this server.",
+	"tagCurrentlyOcuppied": "Name already in use in this guild.",
+	"tagNotOnThisguild" : "You can only see the tag list of those who are on this guild.",
 	"tagAuthor" : "Author",
 	"tagName" : "Tag name",
 	"tagNameTooLong"			: "Tag name can't be over **{extra1}** characters.",
@@ -164,5 +164,7 @@
 
 	"invalidDice": "Invalid dice.",
 	"tooManyDice": "The maximum amount of dice you can roll is: **{extra1}**.",
-	"tooManySides": "The maximum sides per die you can set is: **{extra1}**."
+	"tooManySides": "The maximum sides per die you can set is: **{extra1}**.",
+
+	"pleaseSelectAnOption" : "Please select an option:"
 }

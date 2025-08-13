@@ -6,8 +6,7 @@
 	"invalidLang"				: "Ese idioma no existe.",
 	"langList"					: "Lista de idiomas",
 	
-	
-	"balanceInfo" 				: "El balance de **{memberName}** actualmente es de: {coinSymbol}**{memberBalance}** **{coinName}**.",
+	"balanceInfo" 				: "El balance de **{memberName}** actualmente es de: {coinSymbol}**{extra1}** **{coinName}**.",
 	"noMoney"					: "No tienes suficientes **{coinName}** para eso.",
 	"dailyAlreadyClaimed"		: "**{memberName}**, ya has reclamado tu recompensa diaria.",
 	"dailyClaimed"				: "¡**{memberName}**, has recibido {coinSymbol}**{extra1}** **{coinName}**! Vuelva mañana. :3",
@@ -36,13 +35,15 @@
 	"firstDailyValueBigger"		: "El primer valor no puede ser mayor o igual al segundo.",
 	"secondDailyValueSmaller"	: "El segundo valor no puede ser menor o igual al primero.",
 	"newDailyRangeSuccess"		: "El nuevo rango de la diaria ahora va de **{extra1}** a **{extra2}**.",
-	
-	"roleAdded"					: "El rol '**{extra1}**' ha sido añadido a la tienda por el precio de **{extra2}**.",
-	"roleRemoved"				: "El rol '{**extra1}**' ha sido eliminado de la tienda.",
+
+	"invalidRolePrice"			: "El precio es invalido. Tiene que ser un número mayor a {coinSymbol}**0**.",
+	"roleAdded"					: "El rol `{extra1}` ha sido añadido a la tienda por el precio de {coinSymbol}**{extra2}**.",
+	"roleRemoved"				: "El rol `{extra1}` ha sido eliminado de la tienda.",
+	"roleNotInShop"				: "el rol `{extra1} no se encuentra en la tienda.`",
 	
 	"invalidIndex"				: "El índice proporcionado no existe.",
 	"roleShop"					: "Tienda de roles",
-	"shopAdquired"				: "¡Has comprado el rol '{extra1}'!",
+	"shopAdquired"				: "¡Has comprado el rol: `{extra1}`!",
 	"alreadyHasRole"			: "Ya tienes ese rol.",
 	
 	
@@ -122,23 +123,25 @@
 	"tagNotOwner"				: "No te pertenece este tag.",
 	"tagNotFound"				: "No existe ningún tag llamado así.",
 	"tagAlreadyExists"			: "Ya tienes un tag llamado así.",
-	"tagAlreadyExitsHere"		: "Alguien ya creo un tag llamado así en este servidor",
-	"tagNoUserTags"				: "Esa persona no tiene ningún tag bajo su nombre.",
+	"tagAlreadyExitsHere"		: "Alguien ya tiene un tag bajo ese nombre en este servidor.",
+	"tagNoUserTags"				: "Esa persona no tiene ningún tag bajo su nombre en este servidor.",
 	"tagLimitReached"			: "Has alcanzado el límite de tags.",
-	"tagReported"				: "Reporte envíado. Muchas gracias.",
+	"tagReported"				: "Reporte envíado. Muchas gracias por su aporte.",
+	"tagReportInvalid"			: "La ID proporcionada no es válida.",
 	"tagCurrentlyOcuppied"		: "Nombre ya en uso en este servidor.",
-	"tagNotOnThisServer"		: "Solo puedes ver la lista de tags de quienes estén en este servidor.",
+	"tagUserNotOnThisServer"	: "Solo puedes ver la lista de tags de quienes estén en este servidor.",
 	"tagAuthor"					: "Autor/x",
 	"tagName"					: "Nombre del tag",
 	"tagNameTooLong"			: "El nombre del tag no pude ser de más de **{extra1}** carácteres.",
 	"tagContentTooLong"			: "El contenido del tag no puede ser de más de **{extra1}** carácteres.",
 	"tagFunny"					: "El contenido del tag no puede tener un **@**.",
+	"tagFilter"					: "El nombre o contenido del tag es inadecuado.",
+	"tagNoLocal"				: "No hay tags locales en este servidor.",
 	
 	"e621NotFound"				: "No pude encontrar nada. :(",
 	"e621GoToPost"				: "Ir a e621",
 	"e621Searching"				: "Buscando...",
-	
-	
+
 	"ruJoin"					: "¡**{memberName}** se ha unido a la partida de Ruleta Rusa!",
 	"ruLeave"					: "**{memberName}** se ha salido de la partida de Ruleta Rusa. Cobarde.",
 	"ruStart"					: "¡La partida de Ruleta Rusa ha comenzado!",
@@ -165,5 +168,7 @@
 	
 	"invalidDice"				: "Dado inválido.",
 	"tooManyDice"				: "El máximo de dados que puedes tirar es de: **{extra1}**.",
-	"tooManySides"				: "El máximo de caras que los dados pueden tener es de: **{extra1}**."
+	"tooManySides"				: "El máximo de caras que los dados pueden tener es de: **{extra1}**.",
+
+	"pleaseSelectAnOption"		: "Seleccione una opción:"
 }

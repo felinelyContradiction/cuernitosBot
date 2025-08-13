@@ -1,8 +1,10 @@
 import contextlib
 
+import discord.interactions
+
 with contextlib.redirect_stdout(None):
-    import discord
     from discord.ext import commands
+    from discord import app_commands
     import e621py_wrapper as e621
 
 from random import choice, randint
@@ -13,19 +15,19 @@ from lang.langManager import langMan
 limit = 100
 
 class Button(discord.ui.View):
-    def __init__(self, message, index, posts, guildID, ctx):
+    def __init__(self, followUp, index, posts, guildID, interaction):
         super().__init__()
 
-        self.message = message
+        self.followUp = followUp
         self.index = index
         self.posts = posts
         self.guildID = guildID
-        self.context = ctx
+        self.context = interaction
 
     @discord.ui.button(label=f'<<<', style=discord.ButtonStyle.blurple)
     async def goBackTen(self, interaction: discord.Interaction, button: discord.ui.button):
 
-        if interaction.user != self.context.author:
+        if interaction.user != self.context.user:
             await interaction.response.defer()
             return
 
@@ -34,14 +36,14 @@ class Button(discord.ui.View):
         if self.index < 0:
             self.index = len(self.posts) - abs(self.index)
 
-        await self.message.edit(embed=getEmbed(self.context, self.guildID, self.posts, self.index))
+        await self.followUp.edit(embed=getEmbed(self.context, self.guildID, self.posts, self.index))
 
         await interaction.response.defer()
 
     @discord.ui.button(label=f'<', style=discord.ButtonStyle.blurple)
     async def goBack(self, interaction: discord.Interaction, button: discord.ui.button):
 
-        if interaction.user != self.context.author:
+        if interaction.user != self.context.user:
             await interaction.response.defer()
             return
 
@@ -50,27 +52,27 @@ class Button(discord.ui.View):
         if self.index < 0:
             self.index = len(self.posts) - 1
 
-        await self.message.edit(embed=getEmbed(self.context, self.guildID, self.posts, self.index))
+        await self.followUp.edit(embed=getEmbed(self.context, self.guildID, self.posts, self.index))
 
         await interaction.response.defer()
 
     @discord.ui.button(label=f'Random', style=discord.ButtonStyle.blurple)
     async def random(self, interaction: discord.Interaction, button: discord.ui.button):
 
-        if interaction.user != self.context.author:
+        if interaction.user != self.context.user:
             await interaction.response.defer()
             return
 
         self.index = randint(0, len(self.posts) - 1)
 
-        await self.message.edit(embed=getEmbed(self.context, self.guildID, self.posts, self.index))
+        await self.followUp.edit(embed=getEmbed(self.context, self.guildID, self.posts, self.index))
 
         await interaction.response.defer()
 
     @discord.ui.button(label=f'>', style=discord.ButtonStyle.blurple)
     async def goNext(self, interaction: discord.Interaction, button: discord.ui.button):
 
-        if interaction.user != self.context.author:
+        if interaction.user != self.context.user:
             await interaction.response.defer()
             return
 
@@ -79,14 +81,14 @@ class Button(discord.ui.View):
         if self.index >= len(self.posts):
             self.index = 0
 
-        await self.message.edit(embed=getEmbed(self.context, self.guildID, self.posts, self.index))
+        await self.followUp.edit(embed=getEmbed(self.context, self.guildID, self.posts, self.index))
 
         await interaction.response.defer()
 
     @discord.ui.button(label=f'>>>', style=discord.ButtonStyle.blurple)
     async def goNextTen(self, interaction: discord.Interaction, button: discord.ui.button):
 
-        if interaction.user != self.context.author:
+        if interaction.user != self.context.user:
             await interaction.response.defer()
             return
 
@@ -95,7 +97,7 @@ class Button(discord.ui.View):
         if self.index >= len(self.posts):
             self.index = len(self.posts) - self.index
 
-        await self.message.edit(embed=getEmbed(self.context, self.guildID, self.posts, self.index))
+        await self.followUp.edit(embed=getEmbed(self.context, self.guildID, self.posts, self.index))
 
         await interaction.response.defer()
 
@@ -112,7 +114,7 @@ def getPostInfo(post):
 
     return data
 
-def getEmbed(ctx, guildID, posts, index):
+def getEmbed(interaction, guildID, posts, index):
 
     post = getPostInfo(posts[index])
 
@@ -121,7 +123,7 @@ def getEmbed(ctx, guildID, posts, index):
     embed.title = f"{', '.join(post['artist'])}"
     embed.description = f':thumbsup: ⁣ {post["upVotes"]} ⁣ | ⁣ :thumbsdown: ⁣ {abs(post["downVotes"])} ⁣ | ⁣ :heart: ⁣ {post["favCount"]}'
     embed.add_field(name='', value=f'[__< {langMan.getString("e621GoToPost", guildID=guildID)} >__](https://e621.net/posts/{post["id"]})', inline=True)
-    embed.set_author(name=ctx.author.display_name, icon_url=ctx.author.avatar)
+    embed.set_author(name=interaction.user.display_name, icon_url=interaction.user.avatar)
 
     embed.set_image(url=post['url'])
 
@@ -141,7 +143,45 @@ class e621Command(commands.Cog):
 
         self.e621Client = e621.client()
 
+    @app_commands.command(name="e621", description="Search posts on e621.")
+    @app_commands.describe(tags="tags")
+    async def e621(self, interaction: discord.Interaction, tags: str = 'score:>100'):
+        guildID = interaction.guild_id
 
+        curIndex = 0
+
+        if not interaction.channel.is_nsfw():
+            await interaction.response.send_message(f':no_entry_sign:｜{langMan.getString("NSFWOnlyCommand", guildID=guildID)}')
+            return
+
+        msg = await interaction.channel.send(f':blue_circle:｜{langMan.getString("e621Searching", guildID=guildID)}')
+
+        if 'pool:' in tags:
+            posts = self.e621Client.posts.search(tags=f'order:id {tags} -flash -webm', blacklist=self.blacklist,
+                                                 limit=-1, page=self.page, ignorepage=self.ignorePagination)
+        else:
+            posts = self.e621Client.posts.search(tags=f'order:random {tags} -flash -webm', blacklist=self.blacklist,
+                                                 limit=limit, page=self.page, ignorepage=self.ignorePagination)
+
+        temp = []
+
+        for entry in posts:
+            if entry not in temp:
+                temp.append(entry)
+
+        posts = temp
+
+        if not posts:
+            await msg.edit(content=f':blue_circle:｜{langMan.getString("e621NotFound", guildID=guildID)}')
+            return
+
+        embed = getEmbed(interaction, guildID, posts, curIndex)
+        button = Button(msg, curIndex, posts, guildID, interaction)
+
+        await msg.edit(embed=embed, content='', view=button)
+
+
+    '''
     @commands.command()
     async def e621(self, ctx: commands.Context, *, tags='score:>100'):
 
@@ -169,7 +209,6 @@ class e621Command(commands.Cog):
 
         posts = temp
                 
-
         if not posts:
             await message.edit(content=f':blue_circle:｜{langMan.getString("e621NotFound", guildID=guildID)}')
             return
@@ -178,6 +217,6 @@ class e621Command(commands.Cog):
         button = Button(message, curIndex, posts, guildID, ctx)
 
         await message.edit(embed=embed, content='', view=button)
-
+        '''
 async def setup(client):
     await client.add_cog(e621Command(client))

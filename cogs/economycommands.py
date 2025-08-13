@@ -1,7 +1,9 @@
 
 from discord.ext import commands
-from random import choice, randint
-import discord, sys
+from discord import app_commands
+from discord import ui
+from discord.utils import get
+from random import randint
 
 from utils import *
 from economy import *
@@ -9,6 +11,60 @@ from config import *
 from functions import checkData
 
 from lang.langManager import langMan
+
+class shopDropView(ui.View):
+    def __init__(self, guild: discord.guild):
+        super().__init__(timeout=30)  # Timeout in seconds
+
+
+        self.select = ui.Select(
+            placeholder="Select an option",
+            min_values=1,
+            max_values=1
+        )
+
+        roles: dict = getServerBuyableRoles(guild.id)
+
+        for role in roles:
+
+            roleObject = guild.get_role(role)
+            self.select.add_option(
+                label=roleObject.name,
+                value=f'{role}|{roles[role]}',
+            )
+
+        self.select.callback = self.on_select
+        self.add_item(self.select)
+
+    async def on_select(self, interaction: discord.Interaction):
+        buyInfo: str = self.select.values[0]
+
+        user = interaction.user
+        guild = interaction.guild
+
+        roleID: int = int(buyInfo.split('|')[0])
+        rolePrice: int = int(buyInfo.split('|')[1])
+
+        roleObject = guild.get_role(roleID)
+
+        embed = discord.Embed(title=f"", description='', color=user.color)
+        embed.set_author(name=user.display_name, icon_url=user.avatar)
+
+        if rolePrice >= getUserMoney(user):
+            await interaction.response.send_message(f"{langMan.getString('noMoney', guild.id)}")
+            return
+
+        if roleObject in user.roles:
+            await interaction.response.send_message(f"{langMan.getString('alreadyHasRole', guild.id)}")
+            return
+
+        await user.add_roles(roleObject)
+        decreaseUserMoney(rolePrice, user)
+
+        embed.title = f'{langMan.getString("shopAdquired", extra1=roleObject.name, guildID=guild.id)}'
+
+        await interaction.response.send_message(embed=embed)
+
 
 class economyCommands(commands.Cog):
     def __init__(self, client):
@@ -25,90 +81,70 @@ class economyCommands(commands.Cog):
         except:
             pass
 
-    @commands.command(aliases=['cartera', 'balance', 'billetera'])
-    async def wallet(self, ctx: discord.ext.commands, user: discord.Member = None):
-
-        author = getAuthor(ctx)
-        guildID = ctx.message.author.guild.id
+    @app_commands.command(name="balance", description="Returns someone's balance.")
+    @app_commands.describe(user="User")
+    async def balance(self, interaction: discord.Interaction, user: discord.User):
+        guildID = interaction.guild_id
 
         checkData(guildID)
 
-        member = author
-        if user != None:
-            member = user
+        userBalance: int = getUserMoney(user)
 
-        await ctx.send(f":coin:｜{langMan.getString('balanceInfo', member, guildID)}")
+        await interaction.response.send_message(f":coin:｜{langMan.getString('balanceInfo', member = user, extra1 = userBalance, guildID = guildID)}")
 
-    @commands.command(aliases=['dar'])
-    async def give(self, ctx: discord.ext.commands, cantidad=None, members: commands.Greedy[discord.Member] = None):
+    @app_commands.command(name="transfer", description="Transfer balance to one or more users. (Distribute balance)")
+    async def transfer(self, interaction: discord.Interaction,
+                       balance: int,
+                       user1: discord.User,
+                       user2: discord.User = None,
+                       user3: discord.User = None,
+                       user4: discord.User = None,
+                       user5: discord.User = None):
 
-        author = getAuthor(ctx)
-        guildID = ctx.message.author.guild.id
+        author = interaction.user
+        guildID = interaction.guild_id
 
-        if cantidad == None:
-            await ctx.send(f":grey_question:｜{langMan.getString('noSpecifiedAmount', guildID=guildID)}")
+        users = [user1, user2, user3, user4, user5]
+
+        if balance <= 0:
+            await interaction.response.send_message(f":grey_question:｜{langMan.getString('belowOrEqualToZero', guildID=guildID)}")
             return
 
-        try:
-            cantidad = int(cantidad)
-        except:
-            pass
+        msg: str = ''
 
-        if not isinstance(cantidad, int):
+        cleanList = []
+        for user in users:
+            if user is not None:
+                cleanList.append(user)
 
-            if not cantidad.lower() in ['todo', 'all', 'mitad', 'half']:
-                await ctx.send(f":grey_question:｜{langMan.getString('unknownKeyword', guildID=guildID)}")
-                return
+        for index, user in enumerate(cleanList):
+            # We divide the balance among the users.
+            balanceToBeGiven = int(balance / len(cleanList))
+            increaseUserMoney(balanceToBeGiven, user)
 
-        if members == None:
-            await ctx.send(f":grey_question:｜{langMan.getString('noUserSpecified', guildID=guildID)}")
-            return
-
-        if isinstance(cantidad, str):
-
-            if cantidad.lower() == 'todo' or cantidad.lower() == 'all':
-                cantidad = getUserMoney(author)
-            elif cantidad.lower() == 'mitad' or cantidad.lower() == 'half':
-                cantidad = getUserMoney(author) // 2
-
-        users = ''
-
-        if cantidad > getUserMoney(author) or getUserMoney(author) <= 0:
-            await ctx.send(f":grey_question:｜{langMan.getString('noMoney', guildID=guildID)}")
-            return
-
-        if cantidad <= 0:
-            await ctx.send(f":grey_question:｜{langMan.getString('belowOrEqualToZero', guildID=guildID)}")
-            return
-
-        for key, user in enumerate(members):
-            increaseUserMoney(int(cantidad / len(members)), user)
-
-            if key >= len(members) - 1:
-                users = users + f'{user.display_name}'
+            if index >= len(cleanList) - 1:
+                msg += f'{user.display_name}'
             else:
-                users = users + f'{user.display_name}, '
+                msg += f'{user.display_name}, '
 
-        decreaseUserMoney(cantidad, author)
+        decreaseUserMoney(balance, author)
 
-        if len(members) > 1:
-            await ctx.send(f":coin:｜{langMan.getString('gaveMoneyMultiple', author, guildID, cantidad, users)}")
+        if len(cleanList) > 1:
+            await interaction.response.send_message(f":coin:｜{langMan.getString('gaveMoneyMultiple', author, guildID, balance, msg)}")
         else:
-            await ctx.send(f":coin:｜{langMan.getString('gaveMoneySingle', author, guildID, cantidad, users)}")
+            await interaction.response.send_message(f":coin:｜{langMan.getString('gaveMoneySingle', author, guildID, balance, msg)}")
 
-    @commands.command(aliases=['diaria', 'dailies'])
-    async def daily(self, ctx: discord.ext.commands):
+    @app_commands.command(name="daily", description="Claim daily.")
+    async def daily(self, interaction: discord.Interaction):
 
-        author = getAuthor(ctx)
-        guildID = ctx.message.author.guild.id
-
-        checkData(guildID)
+        author = interaction.user
+        guildID = interaction.guild_id
 
         if not canClaimDaily(author):
-            await ctx.send(f":exclamation:｜{langMan.getString('dailyAlreadyClaimed', author, guildID)}")
+            await interaction.response.send_message(f":exclamation:｜{langMan.getString('dailyAlreadyClaimed', author, guildID)}")
 
             if randint(1, 100) < 10:
-                await ctx.send(
+                await interaction.response.send_message(
                     f'https://cdn.discordapp.com/attachments/545533865809281025/738133197837041704/Screenshot_20200605-185111.png?ex=6651a35c&is=665051dc&hm=4c2d94ee1e68900c93020f8e44b2ec3f0d35f6ce9898e541251b8ff1427b3f58&')
             return
 
@@ -117,19 +153,19 @@ class economyCommands(commands.Cog):
         increaseUserMoney(reward, author)
         setUserLastDailyClaim(datetime.date.today(), author)
 
-        await ctx.send(f":coin:｜{langMan.getString('dailyClaimed', author, guildID, reward)}")
+        await interaction.response.send_message(f":coin:｜{langMan.getString('dailyClaimed', author, guildID, reward)}")
 
-    @commands.command()
-    async def rank(self, ctx: discord.ext.commands):
+    @app_commands.command(name="rank", description="Check out the server balance leaderboard.")
+    async def rank(self, interaction: discord.Interaction):
 
-        author = getAuthor(ctx)
-        guildID = ctx.message.author.guild.id
+        author = interaction.user
+        guildID = interaction.guild_id
 
         users: dict = {}
 
-        embed = discord.Embed(title=f"{langMan.getString('rankingTitle', author, guildID)}", description='', color=ctx.author.color)
+        embed = discord.Embed(title=f"{langMan.getString('rankingTitle', author, guildID)}", description='', color=interaction.user.color)
 
-        for member in ctx.guild.members:
+        for member in interaction.guild.members:
             if doesUserWalletExists(member):
                 users[f'{member.display_name}'] = getUserMoney(member)
 
@@ -138,62 +174,15 @@ class economyCommands(commands.Cog):
 
         for key, user in enumerate(sorted(users, key=users.get, reverse=True)):
             embed.add_field(name=f'{key + 1} - {user}', value=f'{users[user]}', inline=False)
-
             embed.add_field(name=f'', value=f'', inline=False)
 
-        await ctx.send(embed=embed)
+        await interaction.response.send_message(embed=embed)
 
-    @commands.command()
-    async def shop(self, ctx: discord.ext.commands, command: str = 'list', selection: int = None):
+    @app_commands.command(name="shop", description="Check out the server's role shop.")
+    async def shop(self, interaction: discord.Interaction):
 
-        author = getAuthor(ctx)
-        guildID = ctx.message.author.guild.id
-
-        embed = discord.Embed(title=f"", description='', color=ctx.author.color)
-        embed.set_author(name=ctx.author.display_name, icon_url=ctx.author.avatar)
-
-        match command:
-            case 'list':
-
-                embed.title = f'{langMan.getString("roleShop", guildID=guildID)}'
-
-                for key, role in enumerate(getServerBuyableRoles(guildID)):
-
-                    curRole = ctx.guild.get_role(role)
-
-                    if curRole.icon:
-                        embed.add_field(name=f'> {key + 1}. {curRole.icon} {curRole.name}', value=f'*{getCoinSymbol(guildID)}{getServerBuyableRoles(guildID)[role]}*', inline=False)
-                    else:
-                        embed.add_field(name=f'> {key + 1}. {curRole.name}', value=f'*{getCoinSymbol(guildID)}{getServerBuyableRoles(guildID)[role]}*', inline=False)
-
-            case 'buy':
-
-                for key, role in enumerate(getServerBuyableRoles(guildID)):
-                    if selection - 1 == key:
-                        curRole = ctx.guild.get_role(role)
-                        price = getServerBuyableRoles(guildID)[role]
-                        break
-                else:
-                    await ctx.send(f"{langMan.getString('invalidIndex', guildID)}")
-                    return
-
-                if price >= getUserMoney(author):
-                    await ctx.send(f"{langMan.getString('noMoney', guildID)}")
-                    return
-
-                if curRole in author.roles:
-                    await ctx.send(f"{langMan.getString('alreadyHasRole', guildID)}")
-                    return
-
-                try:
-                    await author.add_roles(curRole)
-                    decreaseUserMoney(price, author)
-
-                    embed.title = f'{langMan.getString("shopAdquired", extra1=curRole.name, guildID=guildID)}'
-                except:
-                    pass
-
-        await ctx.send(embed=embed)
+        view = shopDropView(interaction.guild)
+        await interaction.response.send_message(f"{langMan.getString('pleaseSelectAnOption', guildID=interaction.guild_id)}", view=view, ephemeral=True)
 
 async def setup(client):
     await client.add_cog(economyCommands(client))

@@ -1,7 +1,8 @@
 
 from discord.ext import commands
-from random import choice, randint, seed
-import discord
+from discord import app_commands
+
+from random import randint
 
 from utils import *
 from economy import *
@@ -12,38 +13,16 @@ from lang.langManager import langMan
 
 class gambling(commands.Cog):
     def __init__(self, client):
+
         self.client = client
         self.maxDice = 30
         self.maxDiceSides = 1000
 
-    @commands.command(aliases=['dados'])
-    async def roll(self, ctx, diceInfo: str = '2d6'):
+    @app_commands.command(name="dice", description="Roll some dice.")
+    @app_commands.describe(dice="Amount of dice", sides="Sides per die")
+    async def roll(self, interaction: discord.Interaction, dice: int = 2, sides: int = 6):
 
-        seed()
-
-        author = getAuthor(ctx)
-        guildID = ctx.message.author.guild.id
-
-        if not 'd' in diceInfo:
-            await ctx.send(f':grey_question:｜{langMan.getString("invalidDice", guildID=guildID)}')
-            return
-
-        diceInfo: str = diceInfo.split('d')
-
-        try:
-            dice: int = int(diceInfo[0])
-            sides: int = int(diceInfo[1])
-        except:
-            await ctx.send(f':grey_question:｜{langMan.getString("invalidDice", guildID=guildID)}')
-            return
-
-        if dice > self.maxDice:
-            await ctx.send(f':grey_question:｜{langMan.getString("tooManyDice", guildID=guildID, extra1=self.maxDice)}')
-            return
-
-        if sides > self.maxDiceSides:
-            await ctx.send(f':grey_question:｜{langMan.getString("tooManySides", guildID=guildID, extra1=self.maxDiceSides)}')
-            return
+        author = interaction.user
 
         textResult: str = ''
         totalResult: int = 0
@@ -60,80 +39,51 @@ class gambling(commands.Cog):
         if dice > 1:
             textResult = textResult + f' = {totalResult}'
 
-        embed = discord.Embed(title=f'{textResult}', description='', color=ctx.author.color)
+        embed = discord.Embed(title=f'{textResult}', description='', color=author.color)
         embed.set_author(name=author.display_name, icon_url=author.avatar)
 
         embed.set_footer(text=f'({dice}d{sides})')
 
-        await ctx.send(embed=embed)
+        await interaction.response.send_message(embed=embed)
 
-    @commands.command(aliases=['caracruz'])
-    async def coinflip(self, ctx):
+    @app_commands.command(name="coinflip", description="Let the coins decide the fate.")
+    async def coinflip(self, interaction: discord.Interaction):
 
-        seed()
-
-        author = getAuthor(ctx)
-        guildID = ctx.message.author.guild.id
+        guildID = interaction.guild_id
 
         chance = randint(1, 100)
 
         if chance <= 50:
-            await ctx.send(f':coin:｜{langMan.getString("coinflipHeads", guildID=guildID)}')
+            await interaction.response.send_message(f':coin:｜{langMan.getString("coinflipHeads", guildID=guildID)}')
         elif chance > 50:
-            await ctx.send(f':coin:｜{langMan.getString("coinflipTails", guildID=guildID)}')
+            await interaction.response.send_message(f':coin:｜{langMan.getString("coinflipTails", guildID=guildID)}')
 
-    @commands.command(aliases=['apostar', 'doblar', 'doble', 'gamble'])
-    async def double(self, ctx: discord.ext.commands, cantidad=None):
+    @app_commands.command(name="double", description="Let's go gambling!! Gamble the balance you have on this guild.")
+    @app_commands.describe(amount="Amount to gamble.")
+    async def double(self, interaction: discord.Interaction, amount: int):
 
-        seed()
-
-        author = getAuthor(ctx)
-        guildID = ctx.message.author.guild.id
+        author = interaction.user
+        guildID = interaction.guild_id
 
         checkData(guildID)
 
-        if cantidad == None:
-            await ctx.send(f':grey_question:｜{langMan.getString("noSpecifiedAmount", guildID=guildID)}')
+        if amount <= 0:
+            await interaction.response.send_message(f':grey_question:｜{langMan.getString("gambleZero", guildID=guildID)}')
             return
 
-        try:
-            cantidad = int(cantidad)
-        except:
-            pass
-
-        if not isinstance(cantidad, int):
-
-            if not cantidad.lower() in ['todo', 'all', 'mitad', 'half', 'random', 'aleatorio']:
-                await ctx.send(':grey_question:｜La palabra clave ingresada para específicar un monto no existe.')
-                return
-
-        if isinstance(cantidad, str):
-
-            if cantidad.lower() == 'todo' or cantidad.lower() == 'all':
-                cantidad = getUserMoney(author)
-            elif cantidad.lower() == 'mitad' or cantidad.lower() == 'half':
-                cantidad = getUserMoney(author) // 2
-            elif cantidad.lower() == 'random' or cantidad.lower() == 'aleatorio':
-                if getUserMoney(author) > 1:
-                    cantidad = randint(1, getUserMoney(author))
-
-        if cantidad <= 0:
-            await ctx.send(f':grey_question:｜{langMan.getString("gambleZero", guildID=guildID)}')
-            return
-
-        if getUserMoney(author) < cantidad:
-            await ctx.send(f':grey_question:｜{langMan.getString("noMoney", guildID=guildID)}')
+        if getUserMoney(author) < amount:
+            await interaction.response.send_message(f':grey_question:｜{langMan.getString("noMoney", guildID=guildID)}')
             return
 
         chance: int = randint(1, 100)
 
         if chance <= getGamblingChance(guildID):
-            increaseUserMoney(cantidad, author)
+            increaseUserMoney(amount, author)
             embed = discord.Embed(title='', description='', color=8257405)
             embed.add_field(name=f'{langMan.getString("gambleWon", guildID=guildID)}',
                             value=f'> {langMan.getString("newGambleBalance", guildID=guildID, extra1=getUserMoney(author))}', inline=False)
         else:
-            decreaseUserMoney(cantidad, author)
+            decreaseUserMoney(amount, author)
             embed = discord.Embed(title='', description='', color=16743805)
             embed.add_field(name=f'{langMan.getString("gambleLose", guildID=guildID)}',
                             value=f'> {langMan.getString("newGambleBalance", guildID=guildID, extra1=getUserMoney(author))}', inline=False)
@@ -143,8 +93,7 @@ class gambling(commands.Cog):
 
         embed.set_author(name=author.display_name, icon_url=author.avatar)
 
-        await ctx.send(embed=embed)
-
+        await interaction.response.send_message(embed=embed)
 
 async def setup(client):
     await client.add_cog(gambling(client))
